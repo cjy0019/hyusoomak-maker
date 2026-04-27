@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>자동 현수막 생성기 — OK저축은행 마케팅 운영 효율화 프로젝트</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --white: #f5f3ee;
+    --accent: #FF4B00;
+    --accent2: #FFB800;
+    --gray1: #1a1a1a;
+    --gray2: #2a2a2a;
+    --gray3: #555;
+    --gray4: #888;
+    --border: rgba(255,255,255,0.07);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* CUSTOM CURSOR */
+  .cursor {
+    width: 10px; height: 10px;
+    background: var(--accent);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.15s ease;
+    mix-blend-mode: exclusion;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1px solid rgba(255,75,0,0.5);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9998;
+    transition: all 0.08s ease;
+  }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9997;
+    opacity: 0.4;
+  }
+
+  /* CONTAINER */
+  .container {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 48px;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(20px);
+    background: rgba(10,10,10,0.8);
+  }
+  .nav-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 20px 48px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .nav-logo {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--gray4);
+    text-transform: uppercase;
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-links {
+    display: flex; gap: 40px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--gray4);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--white); }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 130px 48px 40px;
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: end;
+  }
+
+  .hero-bg-text {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Bebas Neue', cursive;
+    font-size: clamp(120px, 20vw, 280px);
+    color: rgba(255,255,255,0.025);
+    white-space: nowrap;
+    pointer-events: none;
+    letter-spacing: -0.02em;
+    user-select: none;
+  }
+
+  .hero-left { position: relative; z-index: 2; }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: rgba(255,75,0,0.1);
+    border: 1px solid rgba(255,75,0,0.3);
+    padding: 6px 14px;
+    border-radius: 2px;
+    margin-bottom: 32px;
+  }
+  .hero-eyebrow span {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: clamp(56px, 7vw, 100px);
+    line-height: 0.92;
+    letter-spacing: -0.01em;
+    margin-bottom: 28px;
+  }
+  .hero-title .highlight {
+    color: var(--accent);
+    position: relative;
+    display: inline-block;
+  }
+  .hero-title .highlight::after {
+    content: '';
+    position: absolute;
+    bottom: 4px; left: 0; right: 0;
+    height: 3px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    animation: underline-in 0.8s 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes underline-in {
+    to { transform: scaleX(1); }
+  }
+
+  .hero-desc {
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--gray4);
+    max-width: 420px;
+    margin-bottom: 48px;
+  }
+
+  .hero-cta {
+    display: inline-flex; align-items: center; gap: 12px;
+    background: var(--accent);
+    color: #fff;
+    padding: 16px 32px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: none;
+    transition: all 0.3s;
+    cursor: none;
+  }
+  .hero-cta:hover {
+    background: #fff;
+    color: var(--black);
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--accent);
+  }
+  .hero-cta svg { transition: transform 0.3s; }
+  .hero-cta:hover svg { transform: translateX(4px); }
+
+  .hero-right {
+    position: relative; z-index: 2;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+  }
+
+  /* MOCKUP CARD */
+  .mockup-card {
+    width: 480px;
+    background: var(--gray1);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 40px 120px rgba(0,0,0,0.8);
+    transform: perspective(1200px) rotateY(-6deg) rotateX(2deg);
+    transition: transform 0.6s ease;
+  }
+  .mockup-card:hover {
+    transform: perspective(1200px) rotateY(-2deg) rotateX(1deg);
+  }
+  .mockup-top {
+    background: #161616;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .mockup-dots { display: flex; gap: 6px; }
+  .mockup-dots span {
+    width: 10px; height: 10px; border-radius: 50%;
+  }
+  .mockup-dots span:nth-child(1) { background: #ff5f57; }
+  .mockup-dots span:nth-child(2) { background: #febc2e; }
+  .mockup-dots span:nth-child(3) { background: #28c840; }
+  .mockup-url {
+    flex: 1;
+    background: #222;
+    border-radius: 3px;
+    padding: 4px 12px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--gray4);
+  }
+  .mockup-body { padding: 24px; }
+
+  /* FORM SIMULATION */
+  .form-sim { display: flex; flex-direction: column; gap: 14px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .form-field label {
+    display: block;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--gray4);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .form-field .fval {
+    background: #222;
+    border: 1px solid #333;
+    border-radius: 2px;
+    padding: 8px 10px;
+    font-size: 12px;
+    color: var(--white);
+    width: 100%;
+    transition: border-color 0.2s;
+  }
+  .form-field .fval.active { border-color: var(--accent); }
+  .form-field .fval.filled { color: var(--accent2); }
+
+  .banner-preview {
+    background: linear-gradient(135deg, #c00 0%, #e00 100%);
+    border-radius: 2px;
+    padding: 20px;
+    text-align: center;
+    margin-top: 4px;
+    position: relative;
+    overflow: hidden;
+  }
+  .banner-preview::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 20px);
+  }
+  .banner-text {
+    font-size: 11px;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: 0.05em;
+    position: relative;
+  }
+  .banner-text .b-title { font-size: 16px; display: block; margin-bottom: 4px; }
+  .banner-text .b-rate {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 36px;
+    display: block;
+    color: #FFD700;
+    line-height: 1;
+  }
+  .banner-text .b-sub { font-size: 10px; color: rgba(255,255,255,0.8); }
+
+  .gen-btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    width: 100%;
+    cursor: none;
+    margin-top: 4px;
+    transition: opacity 0.2s;
+  }
+  .gen-btn:hover { opacity: 0.85; }
+
+  /* STATS BAR */
+  .stats-bar {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .stats-bar-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 32px 48px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+  }
+  .stat-item {
+    padding: 0 40px;
+    border-right: 1px solid var(--border);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s ease;
+  }
+  .stat-item:first-child { padding-left: 0; }
+  .stat-item:last-child { border-right: none; }
+  .stat-item.visible { opacity: 1; transform: translateY(0); }
+
+  .stat-num {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 56px;
+    line-height: 1;
+    color: var(--white);
+    letter-spacing: -0.02em;
+  }
+  .stat-num em {
+    color: var(--accent);
+    font-style: normal;
+  }
+  .stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--gray4);
+    text-transform: uppercase;
+    margin-top: 6px;
+    line-height: 1.5;
+  }
+
+  /* SECTION */
+  section { padding: 0; }
+  .section-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 80px 48px;
+  }
+  .section-inner.bg-gray { background: var(--gray1); }
+  .process-section { background: var(--gray1); }
+  .section-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-tag::before {
+    content: '';
+    width: 32px; height: 1px;
+    background: var(--accent);
+  }
+  .section-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: clamp(36px, 5vw, 72px);
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+    margin-bottom: 24px;
+  }
+  .section-body {
+    font-size: 15px;
+    line-height: 1.9;
+    color: var(--gray4);
+    max-width: 600px;
+  }
+
+  /* PROBLEM / SOLUTION */
+  .ps-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 60px;
+  }
+  .ps-card {
+    background: var(--black);
+    padding: 48px;
+    transition: background 0.3s;
+  }
+  .ps-card:hover { background: var(--gray1); }
+  .ps-card-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 1px;
+    margin-bottom: 24px;
+    display: inline-block;
+  }
+  .ps-card.problem .ps-card-tag { background: rgba(255,75,0,0.1); color: var(--accent); border: 1px solid rgba(255,75,0,0.2); }
+  .ps-card.solution .ps-card-tag { background: rgba(255,184,0,0.1); color: var(--accent2); border: 1px solid rgba(255,184,0,0.2); }
+  .ps-card h3 {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 32px;
+    letter-spacing: 0.01em;
+    margin-bottom: 16px;
+  }
+  .ps-card p { font-size: 14px; line-height: 1.85; color: var(--gray4); }
+
+  /* PROCESS */
+  .process-section { background: var(--gray1); }
+  .process-flow {
+    margin-top: 48px;
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--border);
+  }
+  .process-step {
+    flex: 1;
+    padding: 40px 32px;
+    border-right: 1px solid var(--border);
+    position: relative;
+    opacity: 0; transform: translateX(-20px);
+    transition: all 0.5s ease;
+  }
+  .process-step:last-child { border-right: none; }
+  .process-step.visible { opacity: 1; transform: translateX(0); }
+  .process-step:hover { background: rgba(255,75,0,0.03); }
+
+  .step-num {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 60px;
+    color: rgba(255,255,255,0.05);
+    line-height: 1;
+    margin-bottom: -10px;
+    letter-spacing: -0.02em;
+  }
+  .step-icon {
+    width: 40px; height: 40px;
+    background: rgba(255,75,0,0.1);
+    border: 1px solid rgba(255,75,0,0.2);
+    border-radius: 2px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 20px;
+    font-size: 18px;
+  }
+  .step-title {
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: var(--white);
+  }
+  .step-desc { font-size: 13px; line-height: 1.75; color: var(--gray4); }
+
+  /* BEFORE / AFTER */
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 60px;
+  }
+  .compare-card {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .compare-header {
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+  }
+  .compare-card.before .compare-header { background: rgba(255,75,0,0.05); }
+  .compare-card.after .compare-header { background: rgba(255,184,0,0.05); }
+  .compare-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .compare-card.before .compare-label { color: var(--accent); }
+  .compare-card.after .compare-label { color: var(--accent2); }
+  .compare-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    padding: 2px 8px;
+    border-radius: 1px;
+  }
+  .compare-card.before .compare-badge { background: rgba(255,75,0,0.1); color: var(--accent); }
+  .compare-card.after .compare-badge { background: rgba(255,184,0,0.1); color: var(--accent2); }
+  .compare-body { padding: 24px; }
+  .compare-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .compare-item:last-child { border-bottom: none; }
+  .compare-item::before {
+    content: '';
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--gray4);
+    margin-top: 6px;
+    flex-shrink: 0;
+  }
+  .compare-card.before .compare-item { color: var(--gray4); }
+  .compare-card.after .compare-item { color: var(--white); }
+
+  /* TECH STACK */
+  .tech-pills {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    margin-top: 40px;
+  }
+  .tech-pill {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    color: var(--gray4);
+    text-transform: uppercase;
+    border-radius: 1px;
+    transition: all 0.2s;
+  }
+  .tech-pill:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(255,75,0,0.05);
+  }
+
+  /* IMPACT SECTION */
+  .impact-section {
+    background: var(--accent);
+    position: relative;
+    overflow: hidden;
+  }
+  .impact-section-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 80px 48px;
+  }
+  .impact-section::before {
+    content: 'IMPACT';
+    position: absolute;
+    top: 50%; right: -20px;
+    transform: translateY(-50%);
+    font-family: 'Bebas Neue', cursive;
+    font-size: 200px;
+    color: rgba(0,0,0,0.1);
+    line-height: 1;
+    pointer-events: none;
+  }
+  .impact-section .section-tag { color: rgba(0,0,0,0.5); }
+  .impact-section .section-tag::before { background: rgba(0,0,0,0.3); }
+  .impact-section .section-title { color: #000; }
+  .impact-section .section-body { color: rgba(0,0,0,0.6); }
+
+  .impact-numbers {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    margin-top: 60px;
+    position: relative; z-index: 1;
+  }
+  .impact-num-card {
+    border-top: 2px solid rgba(0,0,0,0.2);
+    padding-top: 28px;
+  }
+  .impact-big {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 80px;
+    line-height: 1;
+    color: #000;
+    letter-spacing: -0.02em;
+  }
+  .impact-desc { font-size: 14px; color: rgba(0,0,0,0.6); margin-top: 8px; line-height: 1.5; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+  }
+  .footer-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 32px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-left {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--gray4);
+    letter-spacing: 0.1em;
+  }
+  .footer-left strong { color: var(--white); }
+  .footer-right {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--gray4);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* SCROLL REVEAL */
+  .reveal { opacity: 0; transform: translateY(30px); transition: all 0.7s cubic-bezier(0.16,1,0.3,1); }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* TYPING ANIMATION */
+  .typing-text {
+    display: inline-block;
+    border-right: 2px solid var(--accent);
+    white-space: nowrap;
+    overflow: hidden;
+    animation: typing 3s steps(20, end) forwards, blink 0.75s step-end infinite;
+    width: 0;
+  }
+  @keyframes typing {
+    from { width: 0; }
+    to { width: 100%; }
+  }
+  @keyframes blink {
+    50% { border-color: transparent; }
+  }
+
+  /* PROGRESS BARS */
+  .progress-list { margin-top: 40px; display: flex; flex-direction: column; gap: 20px; }
+  .progress-item {}
+  .progress-top {
+    display: flex; justify-content: space-between;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--gray4);
+    margin-bottom: 8px;
+    letter-spacing: 0.05em;
+  }
+  .progress-bar {
+    height: 3px;
+    background: var(--gray2);
+    border-radius: 1px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 1px;
+    width: 0;
+    transition: width 1.5s cubic-bezier(0.16,1,0.3,1);
+  }
+  .progress-fill.animate { width: var(--target-width); }
+
+  /* COUNTER ANIMATION */
+  .counter { display: inline; }
+
+  /* SCROLL LINE */
+  .scroll-line {
+    position: fixed;
+    top: 0; left: 0;
+    height: 2px;
+    background: var(--accent);
+    z-index: 1000;
+    transition: width 0.1s linear;
+  }
+
+  @media (max-width: 1024px) {
+    .nav-inner { padding: 18px 24px; }
+    .hero-inner { grid-template-columns: 1fr; padding: 110px 24px 56px; }
+    .hero-right { display: none; }
+    .stats-bar-inner { grid-template-columns: 1fr 1fr; padding: 32px 24px; }
+    .stat-item { padding: 16px; }
+    .section-inner { padding: 56px 24px; }
+    .ps-grid { grid-template-columns: 1fr; }
+    .compare-grid { grid-template-columns: 1fr; }
+    .impact-numbers { grid-template-columns: 1fr; gap: 20px; }
+    .impact-section-inner { padding: 56px 24px; }
+    .process-flow { flex-direction: column; }
+    .process-step { border-right: none; border-bottom: 1px solid var(--border); }
+    .footer-inner { flex-direction: column; gap: 10px; text-align: center; padding: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="scroll-line" id="scrollLine"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">Portfolio <span>·</span> Case Study</div>
+    <ul class="nav-links">
+      <li><a href="#overview">개요</a></li>
+      <li><a href="#process">프로세스</a></li>
+      <li><a href="#impact">성과</a></li>
+      <li><a href="#impact" style="background:var(--accent);color:#fff;padding:6px 16px;border-radius:2px;font-weight:700;">시작하기 →</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="overview">
+  <div class="hero-bg-text">BANNER</div>
+  <div class="hero-inner">
+    <div class="hero-left">
+    <div class="hero-eyebrow">
+      <span>OK저축은행 · 디자인팀 이진명</span>
+    </div>
+    <h1 class="hero-title">
+      자동<br>
+      <span class="highlight">현수막</span><br>
+      생성기
+    </h1>
+    <p class="hero-desc">
+      반복적인 수작업 배너 제작 프로세스를 자동화하여<br>
+      업무 시간을 <strong style="color:var(--white)">90% 단축</strong>하고, 브랜드 일관성을 확보한<br>
+      인하우스 마케팅 자동화 툴 구축 프로젝트
+    </p>
+    <a href="#process" class="hero-cta">
+        프로젝트 상세 보기
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+
+  </div><!-- hero-left -->
+  </div><!-- hero-inner -->
+</section>
+<div class="stats-bar">
+  <div class="stats-bar-inner">
+  <div class="stat-item">
+    <div class="stat-num"><span class="counter" data-target="80">0</span><em>%</em></div>
+    <div class="stat-label">업무 시간<br>단축률</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num"><span class="counter" data-target="20">0</span><em>분</em></div>
+    <div class="stat-label">현수막 1종<br>제작 시간</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num"><span class="counter" data-target="50">0</span><em>+</em></div>
+    <div class="stat-label">자동 생성된<br>현수막 수</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num"><span class="counter" data-target="13">0</span><em>건</em></div>
+    <div class="stat-label">디자이너 의뢰<br>월간 감소</div>
+  </div>
+  </div>
+</div>
+
+<!-- PROBLEM / SOLUTION -->
+<section>
+  <div class="section-inner">
+  <div class="section-tag">Background</div>
+  <h2 class="section-title reveal">문제 정의와<br>해결 방향</h2>
+  <p class="section-body reveal">금리 변동, 신규 상품 출시, 이벤트마다 현수막을 디자이너에게 의뢰하는 과정이 반복되었습니다. 빠른 시장 대응이 불가능하고 불필요한 리소스가 낭비되고 있었습니다.</p>
+
+  <div class="ps-grid">
+    <div class="ps-card problem reveal">
+      <div class="ps-card-tag">AS-IS · 문제</div>
+      <h3>손으로 만들고,<br>기다리고, 수정하고</h3>
+      <p>디자이너가 Photoshop으로 매번 수작업 제작 → 검토 → 수정 → 출력까지 평균 4시간 소요. 금리 변경 시 전 영업점 현수막을 일일이 수정해야 했고, 브랜드 가이드를 준수하지 못하는 경우도 빈번했습니다.</p>
+    </div>
+    <div class="ps-card solution reveal">
+      <div class="ps-card-tag">TO-BE · 해결</div>
+      <h3>입력하면<br>즉시 완성본 출력</h3>
+      <p>상품명, 금리, 기간 등 핵심 변수만 입력하면 브랜드 가이드가 적용된 인쇄 규격 파일이 자동 생성됩니다. 마케터가 직접 운영하며, 디자이너 의뢰 없이 즉시 출력 가능합니다.</p>
+    </div>
+  </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process-section" id="process">
+  <div class="section-inner">
+  <div class="section-tag">Process</div>
+  <h2 class="section-title reveal">어떻게 만들었나</h2>
+  <p class="section-body reveal">현업 마케터 인터뷰 → 프로세스 분석 → 프로토타입 → 내부 배포까지, 실제 사용자 중심으로 설계했습니다.</p>
+
+  <div class="process-flow">
+    <div class="process-step">
+      <div class="step-num">01</div>
+      <div class="step-icon">🔍</div>
+      <div class="step-title">현황 분석</div>
+      <div class="step-desc">기존 제작 프로세스 플로우차트 작성, 담당자 인터뷰를 통해 병목 구간과 반복 패턴 파악</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">02</div>
+      <div class="step-icon">📐</div>
+      <div class="step-title">템플릿 설계</div>
+      <div class="step-desc">브랜드 가이드 기반 현수막 레이아웃 20종 표준화, 변수 구조 설계 및 디자인 QA</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">03</div>
+      <div class="step-icon">⚙️</div>
+      <div class="step-title">자동화 구현</div>
+      <div class="step-desc">입력폼 → 데이터 바인딩 → 인쇄 규격 파일(PDF/PNG) 자동 렌더링 파이프라인 구축</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">04</div>
+      <div class="step-icon">🚀</div>
+      <div class="step-title">사내 배포</div>
+      <div class="step-desc">전국 영업점 담당자 대상 가이드 문서 작성 및 교육, 피드백 반영 후 v2 고도화</div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<!-- BEFORE / AFTER -->
+<section>
+  <div class="section-inner">
+  <div class="section-tag">Before & After</div>
+  <h2 class="section-title reveal">도입 전후 비교</h2>
+
+  <div class="compare-grid">
+    <div class="compare-card before reveal">
+      <div class="compare-header">
+        <span class="compare-label">도입 전</span>
+        <span class="compare-badge">기존 방식</span>
+      </div>
+      <div class="compare-body">
+        <div class="compare-item">디자이너 Photoshop 수작업, 1종당 평균 4시간</div>
+        <div class="compare-item">금리·상품 변경 시 전체 재제작 필요</div>
+        <div class="compare-item">담당자별 폰트·색상 제각각, 브랜드 일관성 부재</div>
+        <div class="compare-item">영업점→본사→디자이너 3단계 의뢰 프로세스</div>
+        <div class="compare-item">출력 전 오탈자 발생 시 전량 폐기 후 재제작</div>
+      </div>
+    </div>
+    <div class="compare-card after reveal">
+      <div class="compare-header">
+        <span class="compare-label">도입 후</span>
+        <span class="compare-badge">자동화 시스템</span>
+      </div>
+      <div class="compare-body">
+        <div class="compare-item">마케터 직접 입력, 3분 이내 인쇄 파일 완성</div>
+        <div class="compare-item">변수만 수정하면 즉시 전 규격 업데이트</div>
+        <div class="compare-item">브랜드 가이드 잠금 처리, 100% 일관성 유지</div>
+        <div class="compare-item">단일 플랫폼에서 마케터가 직접 처리</div>
+        <div class="compare-item">입력 시 실시간 미리보기로 오류 사전 방지</div>
+      </div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<!-- EFFICIENCY METRICS -->
+<section class="process-section">
+  <div class="section-inner">
+  <div class="section-tag">Metrics</div>
+  <h2 class="section-title reveal">효율화 지표</h2>
+  <div class="progress-list">
+    <div class="progress-item reveal">
+      <div class="progress-top">
+        <span>현수막 제작 시간</span>
+        <span style="color: var(--accent)">4시간 → 20분</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="--target-width: 92%"></div></div>
+    </div>
+    <div class="progress-item reveal">
+      <div class="progress-top">
+        <span>디자이너 반복 요청 감소</span>
+        <span style="color: var(--accent)">월 15건 → 2건</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="--target-width: 75%"></div></div>
+    </div>
+    <div class="progress-item reveal">
+      <div class="progress-top">
+        <span>브랜드 가이드 준수율</span>
+        <span style="color: var(--accent)">기존 대비 대폭 향상</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="--target-width: 85%"></div></div>
+    </div>
+    <div class="progress-item reveal">
+      <div class="progress-top">
+        <span>마케터 자체 처리율</span>
+        <span style="color: var(--accent)">디자이너 의뢰 없이 직접 생성</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="--target-width: 90%"></div></div>
+    </div>
+  </div>
+
+  <div class="tech-pills" style="margin-top: 48px;">
+    <div class="section-tag" style="width: 100%; margin-bottom: 0;">Tech & Tools</div>
+    <div class="tech-pill">Google Apps Script</div>
+    <div class="tech-pill">Google Slides API</div>
+    <div class="tech-pill">Google Forms</div>
+    <div class="tech-pill">HTML Canvas</div>
+    <div class="tech-pill">Figma Template</div>
+    <div class="tech-pill">PDF Export</div>
+    <div class="tech-pill">Brand System</div>
+  </div>
+  </div>
+</section>
+
+<!-- IMPACT -->
+<section class="impact-section" id="impact">
+  <div class="impact-section-inner">
+  <div class="section-tag">Impact</div>
+  <h2 class="section-title">이 프로젝트가<br>만든 변화</h2>
+  <p class="section-body">단순한 툴이 아닌, 조직의 업무 방식 자체를 바꿨습니다. 반복 작업에서 해방된 디자이너는 고부가 창의 작업에 집중하고, 마케터는 즉각적인 시장 대응이 가능해졌습니다.</p>
+
+  <div class="impact-numbers">
+    <div class="impact-num-card">
+      <div class="impact-big">80%</div>
+      <div class="impact-desc">현수막 제작에 소요되는<br>시간 감소</div>
+    </div>
+    <div class="impact-num-card">
+      <div class="impact-big">13건</div>
+      <div class="impact-desc">디자이너 반복 의뢰 월간 감소,<br>크리에이티브 업무로 집중</div>
+    </div>
+    <div class="impact-num-card">
+      <div class="impact-big">즉시</div>
+      <div class="impact-desc">금리·상품 변경 시<br>당일 현수막 교체 대응 가능</div>
+    </div>
+  </div>
+  </div><!-- impact-section-inner -->
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+  <div class="footer-left">
+    <strong>자동 현수막 생성기</strong> · OK저축은행 디자인팀 이진명<br>
+    <span style="font-size:10px">마케팅 자동화 · 업무 프로세스 혁신 · 브랜드 관리</span>
+  </div>
+  <div class="footer-right">
+    Case Study · 2024
+  </div>
+  </div>
+</footer>
+
+<script>
+  // CURSOR
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx - 5 + 'px';
+    cursor.style.top = my - 5 + 'px';
+  });
+  function animateRing() {
+    rx += (mx - rx - 18) * 0.12;
+    ry += (my - ry - 18) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => { cursor.style.transform = 'scale(2.5)'; ring.style.opacity = '0'; });
+    el.addEventListener('mouseleave', () => { cursor.style.transform = 'scale(1)'; ring.style.opacity = '1'; });
+  });
+
+  // SCROLL LINE
+  const scrollLine = document.getElementById('scrollLine');
+  window.addEventListener('scroll', () => {
+    const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+    scrollLine.style.width = pct + '%';
+  });
+
+  // INTERSECTION OBSERVER
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), 100);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.reveal, .stat-item, .process-step').forEach(el => observer.observe(el));
+
+  // PROGRESS BARS
+  const progressObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.querySelectorAll('.progress-fill').forEach(bar => {
+          setTimeout(() => bar.classList.add('animate'), 200);
+        });
+      }
+    });
+  }, { threshold: 0.3 });
+  document.querySelectorAll('.progress-list').forEach(el => progressObserver.observe(el));
+
+  // COUNTER
+  function animateCounter(el) {
+    const target = parseInt(el.dataset.target);
+    const dur = 2000;
+    const start = performance.now();
+    function update(now) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / dur, 1);
+      const ease = 1 - Math.pow(1 - progress, 4);
+      el.textContent = Math.round(ease * target);
+      if (progress < 1) requestAnimationFrame(update);
+    }
+    requestAnimationFrame(update);
+  }
+  const counterObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.querySelectorAll('.counter').forEach(animateCounter);
+        counterObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.stats-bar').forEach(el => counterObserver.observe(el));
+
+  // STAGGER PROCESS STEPS
+  const stepObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        document.querySelectorAll('.process-step').forEach((step, i) => {
+          setTimeout(() => step.classList.add('visible'), i * 120);
+        });
+      }
+    });
+  }, { threshold: 0.2 });
+  const pf = document.querySelector('.process-flow');
+  if (pf) stepObserver.observe(pf);
+
+  // STAT ITEMS STAGGER
+  const statObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        document.querySelectorAll('.stat-item').forEach((item, i) => {
+          setTimeout(() => item.classList.add('visible'), i * 100);
+        });
+      }
+    });
+  }, { threshold: 0.3 });
+  const sb = document.querySelector('.stats-bar');
+  if (sb) statObserver.observe(sb);
+</script>
+</body>
+</html>
