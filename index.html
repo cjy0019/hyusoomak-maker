@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>자동 현수막 생성기 — OK저축은행 마케팅 운영 효율화 프로젝트</title>
+<title>자동 배너 생성기 — OK저축은행 마케팅 운영 효율화 프로젝트</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -86,7 +86,7 @@
   .nav-logo {
     font-family: 'DM Mono', monospace;
     font-size: 11px;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.11em;
     color: var(--gray4);
     text-transform: uppercase;
   }
@@ -98,7 +98,7 @@
   .nav-links a {
     font-family: 'DM Mono', monospace;
     font-size: 11px;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.0825em;
     color: var(--gray4);
     text-decoration: none;
     text-transform: uppercase;
@@ -130,7 +130,7 @@
     color: rgba(255,255,255,0.025);
     white-space: nowrap;
     pointer-events: none;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.012em;
     user-select: none;
   }
 
@@ -146,7 +146,7 @@
   .hero-eyebrow span {
     font-family: 'DM Mono', monospace;
     font-size: 10px;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.11em;
     color: var(--accent);
     text-transform: uppercase;
   }
@@ -165,8 +165,8 @@
   .hero-title {
     font-family: 'Bebas Neue', cursive;
     font-size: clamp(56px, 7vw, 100px);
-    line-height: 0.92;
-    letter-spacing: -0.01em;
+    line-height: 1.1;
+    letter-spacing: -0.006em;
     margin-bottom: 28px;
   }
   .hero-title .highlight {
@@ -194,6 +194,7 @@
     color: var(--gray4);
     max-width: 420px;
     margin-bottom: 48px;
+    letter-spacing: -0.02em;
   }
 
   .hero-cta {
@@ -203,7 +204,7 @@
     padding: 16px 32px;
     font-size: 13px;
     font-weight: 700;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.055em;
     text-transform: uppercase;
     text-decoration: none;
     border: none;
@@ -273,7 +274,7 @@
     display: block;
     font-family: 'DM Mono', monospace;
     font-size: 9px;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.0825em;
     color: var(--gray4);
     text-transform: uppercase;
     margin-bottom: 6px;
@@ -309,7 +310,7 @@
     font-size: 11px;
     font-weight: 900;
     color: #fff;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.0275em;
     position: relative;
   }
   .banner-text .b-title { font-size: 16px; display: block; margin-bottom: 4px; }
@@ -329,7 +330,7 @@
     padding: 10px;
     font-size: 12px;
     font-weight: 700;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.055em;
     text-transform: uppercase;
     width: 100%;
     cursor: none;
@@ -366,17 +367,17 @@
     font-family: 'Bebas Neue', cursive;
     font-size: 56px;
     line-height: 1;
-    color: var(--white);
-    letter-spacing: -0.02em;
+    color: var(--accent);
+    letter-spacing: -0.012em;
   }
   .stat-num em {
-    color: var(--accent);
+    color: var(--white);
     font-style: normal;
   }
   .stat-label {
     font-family: 'DM Mono', monospace;
     font-size: 10px;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.0825em;
     color: var(--gray4);
     text-transform: uppercase;
     margin-top: 6px;
@@ -395,7 +396,7 @@
   .section-tag {
     font-family: 'DM Mono', monospace;
     font-size: 10px;
-    letter-spacing: 0.25em;
+    letter-spacing: 0.1375em;
     color: var(--accent);
     text-transform: uppercase;
     margin-bottom: 20px;
@@ -412,7 +413,7 @@
     font-family: 'Bebas Neue', cursive;
     font-size: clamp(36px, 5vw, 72px);
     line-height: 0.95;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.006em;
     margin-bottom: 24px;
   }
   .section-body {
@@ -420,6 +421,7 @@
     line-height: 1.9;
     color: var(--gray4);
     max-width: 600px;
+    letter-spacing: -0.02em;
   }
 
   /* PROBLEM / SOLUTION */
@@ -440,7 +442,7 @@
   .ps-card-tag {
     font-family: 'DM Mono', monospace;
     font-size: 9px;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.11em;
     text-transform: uppercase;
     padding: 4px 10px;
     border-radius: 1px;
@@ -452,10 +454,10 @@
   .ps-card h3 {
     font-family: 'Bebas Neue', cursive;
     font-size: 32px;
-    letter-spacing: 0.01em;
+    letter-spacing: 0.0055em;
     margin-bottom: 16px;
   }
-  .ps-card p { font-size: 14px; line-height: 1.85; color: var(--gray4); }
+  .ps-card p { font-size: 14px; line-height: 1.85; color: var(--gray4); letter-spacing: -0.02em; }
 
   /* PROCESS */
   .process-section { background: var(--gray1); }
@@ -483,7 +485,7 @@
     color: rgba(255,255,255,0.05);
     line-height: 1;
     margin-bottom: -10px;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.012em;
   }
   .step-icon {
     width: 40px; height: 40px;
@@ -500,7 +502,7 @@
     margin-bottom: 10px;
     color: var(--white);
   }
-  .step-desc { font-size: 13px; line-height: 1.75; color: var(--gray4); }
+  .step-desc { font-size: 13px; line-height: 1.75; color: var(--gray4); letter-spacing: -0.02em; }
 
   /* BEFORE / AFTER */
   .compare-grid {
@@ -526,7 +528,7 @@
   .compare-label {
     font-family: 'DM Mono', monospace;
     font-size: 10px;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.0825em;
     text-transform: uppercase;
   }
   .compare-card.before .compare-label { color: var(--accent); }
@@ -566,7 +568,7 @@
   .tech-pill {
     font-family: 'DM Mono', monospace;
     font-size: 11px;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.055em;
     padding: 8px 16px;
     border: 1px solid var(--border);
     color: var(--gray4);
@@ -623,7 +625,7 @@
     font-size: 80px;
     line-height: 1;
     color: #000;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.012em;
   }
   .impact-desc { font-size: 14px; color: rgba(0,0,0,0.6); margin-top: 8px; line-height: 1.5; }
 
@@ -643,14 +645,14 @@
     font-family: 'DM Mono', monospace;
     font-size: 11px;
     color: var(--gray4);
-    letter-spacing: 0.1em;
+    letter-spacing: 0.055em;
   }
   .footer-left strong { color: var(--white); }
   .footer-right {
     font-family: 'DM Mono', monospace;
     font-size: 10px;
     color: var(--gray4);
-    letter-spacing: 0.1em;
+    letter-spacing: 0.055em;
     text-transform: uppercase;
   }
 
@@ -684,7 +686,7 @@
     font-size: 11px;
     color: var(--gray4);
     margin-bottom: 8px;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.0275em;
   }
   .progress-bar {
     height: 3px;
@@ -740,12 +742,12 @@
 <!-- NAV -->
 <nav>
   <div class="nav-inner">
-    <div class="nav-logo">Portfolio <span>·</span> Case Study</div>
+    <div class="nav-logo">Portfolio</div>
     <ul class="nav-links">
       <li><a href="#overview">개요</a></li>
       <li><a href="#process">프로세스</a></li>
       <li><a href="#impact">성과</a></li>
-      <li><a href="#impact" style="background:var(--accent);color:#fff;padding:6px 16px;border-radius:2px;font-weight:700;">시작하기 →</a></li>
+      <li><a href="file:///Users/jinmyeong/Downloads/ok_banner_designer_14.html" style="background:var(--accent);color:#fff;padding:6px 16px;border-radius:2px;font-weight:700;">시작하기 →</a></li>
     </ul>
   </div>
 </nav>
@@ -760,9 +762,10 @@
     </div>
     <h1 class="hero-title">
       자동<br>
-      <span class="highlight">현수막</span><br>
+      <span class="highlight">배너</span><br>
       생성기
     </h1>
+    <p style="font-family:'DM Mono',monospace;font-size:16px;letter-spacing:0.08em;color:var(--gray4);margin-top:-8px;margin-bottom:28px;">(AI 자동화 적용_PART1)</p>
     <p class="hero-desc">
       반복적인 수작업 배너 제작 프로세스를 자동화하여<br>
       업무 시간을 <strong style="color:var(--white)">90% 단축</strong>하고, 브랜드 일관성을 확보한<br>
@@ -774,7 +777,12 @@
           <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </a>
-
+      <a href="file:///Users/jinmyeong/Downloads/ok_banner_designer_14.html" class="hero-cta" style="margin-left:12px;background:transparent;border:1px solid rgba(255,75,0,0.4);color:var(--accent);">
+        시작하기
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
   </div><!-- hero-left -->
   </div><!-- hero-inner -->
 </section>
@@ -786,11 +794,11 @@
   </div>
   <div class="stat-item">
     <div class="stat-num"><span class="counter" data-target="20">0</span><em>분</em></div>
-    <div class="stat-label">현수막 1종<br>제작 시간</div>
+    <div class="stat-label">배너 1종<br>제작 시간</div>
   </div>
   <div class="stat-item">
-    <div class="stat-num"><span class="counter" data-target="50">0</span><em>+</em></div>
-    <div class="stat-label">자동 생성된<br>현수막 수</div>
+    <div class="stat-num"><span class="counter" data-target="30">0</span><em>+</em></div>
+    <div class="stat-label">자동 생성된<br>배너 수</div>
   </div>
   <div class="stat-item">
     <div class="stat-num"><span class="counter" data-target="13">0</span><em>건</em></div>
@@ -804,13 +812,13 @@
   <div class="section-inner">
   <div class="section-tag">Background</div>
   <h2 class="section-title reveal">문제 정의와<br>해결 방향</h2>
-  <p class="section-body reveal">금리 변동, 신규 상품 출시, 이벤트마다 현수막을 디자이너에게 의뢰하는 과정이 반복되었습니다. 빠른 시장 대응이 불가능하고 불필요한 리소스가 낭비되고 있었습니다.</p>
+  <p class="section-body reveal">금리 변동, 신규 상품 출시, 이벤트마다 배너을 디자이너에게 의뢰하는 과정이 반복되었습니다. 빠른 시장 대응이 불가능하고 불필요한 리소스가 낭비되고 있었습니다.</p>
 
   <div class="ps-grid">
     <div class="ps-card problem reveal">
       <div class="ps-card-tag">AS-IS · 문제</div>
       <h3>손으로 만들고,<br>기다리고, 수정하고</h3>
-      <p>디자이너가 Photoshop으로 매번 수작업 제작 → 검토 → 수정 → 출력까지 평균 4시간 소요. 금리 변경 시 전 영업점 현수막을 일일이 수정해야 했고, 브랜드 가이드를 준수하지 못하는 경우도 빈번했습니다.</p>
+      <p>디자이너가 Photoshop으로 매번 수작업 제작 → 검토 → 수정 → 출력까지 평균 4시간 소요. 금리 변경 시 전 영업점 배너을 일일이 수정해야 했고, 브랜드 가이드를 준수하지 못하는 경우도 빈번했습니다.</p>
     </div>
     <div class="ps-card solution reveal">
       <div class="ps-card-tag">TO-BE · 해결</div>
@@ -826,7 +834,7 @@
   <div class="section-inner">
   <div class="section-tag">Process</div>
   <h2 class="section-title reveal">어떻게 만들었나</h2>
-  <p class="section-body reveal">현업 마케터 인터뷰 → 프로세스 분석 → 프로토타입 → 내부 배포까지, 실제 사용자 중심으로 설계했습니다.</p>
+  <p class="section-body reveal" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:20px;letter-spacing:-0.02em;">(AI 자동화 적용_PART1)</p>
 
   <div class="process-flow">
     <div class="process-step">
@@ -839,7 +847,7 @@
       <div class="step-num">02</div>
       <div class="step-icon">📐</div>
       <div class="step-title">템플릿 설계</div>
-      <div class="step-desc">브랜드 가이드 기반 현수막 레이아웃 20종 표준화, 변수 구조 설계 및 디자인 QA</div>
+      <div class="step-desc">브랜드 가이드 기반 배너 레이아웃 20종 표준화, 변수 구조 설계 및 디자인 QA</div>
     </div>
     <div class="process-step">
       <div class="step-num">03</div>
@@ -902,7 +910,7 @@
   <div class="progress-list">
     <div class="progress-item reveal">
       <div class="progress-top">
-        <span>현수막 제작 시간</span>
+        <span>배너 제작 시간</span>
         <span style="color: var(--accent)">4시간 → 20분</span>
       </div>
       <div class="progress-bar"><div class="progress-fill" style="--target-width: 92%"></div></div>
@@ -953,7 +961,7 @@
   <div class="impact-numbers">
     <div class="impact-num-card">
       <div class="impact-big">80%</div>
-      <div class="impact-desc">현수막 제작에 소요되는<br>시간 감소</div>
+      <div class="impact-desc">배너 제작에 소요되는<br>시간 감소</div>
     </div>
     <div class="impact-num-card">
       <div class="impact-big">13건</div>
@@ -961,21 +969,55 @@
     </div>
     <div class="impact-num-card">
       <div class="impact-big">즉시</div>
-      <div class="impact-desc">금리·상품 변경 시<br>당일 현수막 교체 대응 가능</div>
+      <div class="impact-desc">금리·상품 변경 시<br>당일 배너 교체 대응 가능</div>
     </div>
   </div>
   </div><!-- impact-section-inner -->
+</section>
+
+<!-- NEXT / ROADMAP -->
+<section style="border-top:1px solid var(--border);">
+  <div class="section-inner">
+    <div class="section-tag">Next</div>
+    <h2 class="section-title reveal"><span style="color:var(--accent)">자동화,</span> 계속된다</h2>
+    <p class="section-body reveal" style="letter-spacing:-0.02em;">배너 생성기는 시작일 뿐입니다. 반복되는 디자인 업무를 하나씩 자동화해 디자이너가 창의적인 일에 집중할 수 있는 환경을 만들어갑니다.</p>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-top:48px;">
+
+      <div style="background:var(--black);padding:36px 32px;transition:background 0.3s;" onmouseover="this.style.background='var(--gray1)'" onmouseout="this.style.background='var(--black)'">
+        <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.08em;color:var(--accent);text-transform:uppercase;margin-bottom:16px;">PART 1 · 완료</div>
+        <div style="font-size:22px;margin-bottom:12px;">🏷️</div>
+        <div style="font-weight:700;font-size:15px;color:var(--white);margin-bottom:8px;">자동 배너 생성기</div>
+        <div style="font-size:13px;line-height:1.75;color:var(--gray4);letter-spacing:-0.02em;">상품명·금리·기간 입력만으로 브랜드 규격 배너을 즉시 출력. 디자이너 의뢰 없이 마케터가 직접 운영.</div>
+      </div>
+
+      <div style="background:var(--black);padding:36px 32px;transition:background 0.3s;position:relative;" onmouseover="this.style.background='var(--gray1)'" onmouseout="this.style.background='var(--black)'">
+        <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.08em;color:var(--accent2);text-transform:uppercase;margin-bottom:16px;">PART 2 · 개발 예정</div>
+        <div style="font-size:22px;margin-bottom:12px;">📄</div>
+        <div style="font-weight:700;font-size:15px;color:var(--white);margin-bottom:8px;">자동 계약서 생성기</div>
+        <div style="font-size:13px;line-height:1.75;color:var(--gray4);letter-spacing:-0.02em;">고객 정보와 상품 조건을 입력하면 표준 계약서가 자동 완성. 수기 작성 오류를 없애고 업무 속도를 높입니다.</div>
+      </div>
+
+      <div style="background:var(--black);padding:36px 32px;transition:background 0.3s;" onmouseover="this.style.background='var(--gray1)'" onmouseout="this.style.background='var(--black)'">
+        <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.08em;color:var(--gray4);text-transform:uppercase;margin-bottom:16px;">PART 3 · 기획 중</div>
+        <div style="font-size:22px;margin-bottom:12px;">🖼️</div>
+        <div style="font-weight:700;font-size:15px;color:var(--white);margin-bottom:8px;">그래픽 라이브러리 자동화</div>
+        <div style="font-size:13px;line-height:1.75;color:var(--gray4);letter-spacing:-0.02em;">서비스 전반에 일관되게 적용되는 아이콘·일러스트 등 시각 자산을 AI 툴로 제작·확장하고, 디자인 시스템과 연계해 운영 효율을 높입니다.</div>
+      </div>
+
+    </div>
+  </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
   <div class="footer-inner">
   <div class="footer-left">
-    <strong>자동 현수막 생성기</strong> · OK저축은행 디자인팀 이진명<br>
+    <strong>자동 배너 생성기</strong> · OK저축은행 디자인팀 이진명<br>
     <span style="font-size:10px">마케팅 자동화 · 업무 프로세스 혁신 · 브랜드 관리</span>
   </div>
   <div class="footer-right">
-    Case Study · 2024
+    OK저축은행 디자인팀 이진명
   </div>
   </div>
 </footer>
