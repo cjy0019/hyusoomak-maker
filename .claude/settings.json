@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git --no-pager diff index.html)",
+      "Read(//tmp/**)",
+      "Bash(GIT_PAGER=cat git diff index.html)",
+      "Bash(git config *)",
+      "Bash(tee /tmp/d.txt)",
+      "Bash(git diff *)"
+    ],
+    "additionalDirectories": [
+      "/tmp"
+    ]
+  }
+}
